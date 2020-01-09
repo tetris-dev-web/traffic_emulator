@@ -110,10 +110,11 @@ fvis <-function(from, to, zone, area, camera){
   
   str_json = gsub("\\\\", "", jsonlite::toJSON(json_all_dcpref))
   str_prior_parse = sub('^[^\\{]*\\{', '[{', str_json)
-  str_after_parse = gsub("\"]", "]", str_json)
+  str_after_parse = gsub("\"]", "]", str_prior_parse)
+  json_result = gsub("}\\,]", "}]", str_after_parse)
   
-  base64_enc_str = base64_enc(str_after_parse)
-  return(str_after_parse)
+  base64_enc_str = base64_enc(json_result)
+  return(base64_enc_str)
 }
 
 #* Get EVT from Database
