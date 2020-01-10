@@ -50,7 +50,7 @@ fvis <-function(from, to, zone, area, camera){
   
   i_cab32 = i_zone * (2 ^ 26) + i_area * (2 ^ 20) + i_pad1 * (2 ^ 12) + i_camera * (2 ^ 6) + i_pad2
   
-  res_query <- dbGetQuery(data_handler, sprintf("select * from dc where (op16 = 12 AND cab32 = %d AND tick32 >= %d AND etick32 <= %d ) order by tick32 asc", i_cab32, i_from, i_to))
+  res_query <- dbGetQuery(data_handler, sprintf("select * from dc where (op16 = 12 AND cab32 = %d AND tick32 >= %d AND tick32 <= %d ) order by tick32 asc", i_cab32, i_from, i_to))
   return_json_data = res_query
   
   cab32_val = gsub(' ', '', paste(paste(paste(paste(paste(paste(paste(paste(toString(i_zone), '-'), toString(i_area)), '-'), '0'), '-'), toString(i_camera)), '-'), '0'))
@@ -97,6 +97,10 @@ fvis <-function(from, to, zone, area, camera){
     if (tick32_tag == list_tick32[[calc_count]]) {
       dck_dcv_step_json = sprintf('{"dck": {"op16": %d, "cla": %d, "cab64s": "%s", "cab32s": "%s", "id64": %s, "id32": %d}, "dcv": %s},', 12, as.numeric(list_cla16[[calc_count]]), list_cab64s, list_cab32s, as.bigz(list_id64[[calc_count]]), list_id32[[calc_count]], list_dcv[[calc_count]])
       json_dck_dcv = paste(json_dck_dcv, dck_dcv_step_json)
+      if (calc_count == time_array_length) {
+        dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+        json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
+      }
       calc_count = calc_count + 1
     } else {
       dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
@@ -190,6 +194,10 @@ evt <- function(from, to, zone, area, camera){
     if (tick32_tag == list_tick32[[calc_count]]) {
       dck_dcv_step_json = sprintf('{"dck": {"op16": %d, "cla": %d, "cab64s": "%s", "cab32s": "%s", "id64": %s, "id32": %d}, "dcv": %s},', 12, as.numeric(list_cla16[[calc_count]]), list_cab64s, list_cab32s, as.bigz(list_id64[[calc_count]]), list_id32[[calc_count]], list_dcv[[calc_count]])
       json_dck_dcv = paste(json_dck_dcv, dck_dcv_step_json)
+      if (calc_count == time_array_length) {
+        dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+        json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
+      }
       calc_count = calc_count + 1
     } else {
       dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
