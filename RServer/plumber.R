@@ -99,11 +99,13 @@ fvis <-function(from, to, zone, area, camera){
       json_dck_dcv = paste(json_dck_dcv, dck_dcv_step_json)
       if (calc_count == time_array_length) {
         dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+        json_dck_dcv = ''
         json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
       }
       calc_count = calc_count + 1
     } else {
       dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+      json_dck_dcv = ''
       json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
       tick32_tag = list_tick32[[calc_count]]
     }
@@ -196,11 +198,13 @@ evt <- function(from, to, zone, area, camera){
       json_dck_dcv = paste(json_dck_dcv, dck_dcv_step_json)
       if (calc_count == time_array_length) {
         dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+        json_dck_dcv = ''
         json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
       }
       calc_count = calc_count + 1
     } else {
       dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+      json_dck_dcv = ''
       json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
       tick32_tag = list_tick32[[calc_count]]
     }
@@ -222,7 +226,7 @@ evt <- function(from, to, zone, area, camera){
 #* @param zone -> zone number
 #* @param area -> area number
 #* @param camera -> camera number
-#* @get /emata
+#* @get /emeta
 emeta <- function(zone, area, camera){
   # dcpref value fields
   db_node_name = db_name
