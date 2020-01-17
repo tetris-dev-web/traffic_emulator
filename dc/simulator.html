@@ -104,8 +104,8 @@
                 getEmetaFromRServer(cameraId, areaId, zoneId, to, from);
                 break;
             case 1:         // JS api call
-                var json_emeta = emeta_create(1, 1, 1);
-                var json_fvis = fvis_create(1, 1, 1, Math.round(Date.now() / 1000), Math.round(Date.now() / 1000) +
+                var json_emeta = emeta_create(zoneId, areaId, cameraId);
+                var json_fvis = fvis_create(zoneId, areaId, cameraId, Math.round(Date.now() / 1000), Math.round(Date.now() / 1000) +
                     FVIS_CAPTURE_DURATION);
                 //console.log(json_fvis);
                 Main(json_fvis, json_emeta);
