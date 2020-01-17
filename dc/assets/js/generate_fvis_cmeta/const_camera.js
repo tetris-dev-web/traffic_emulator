@@ -9,13 +9,15 @@ const CAMERA_INFO = [{
     area: 1,
     camera: 2,
     lat: 120.03858490589059,
-    long: 31.305970975138788
+    long: 31.305970975138788,
+    cntLane : 4
 }, {
     zone: 1,
     area: 1,
     camera: 3,
     lat: 120.03908113218328,
-    long: 31.29591777911836
+    long: 31.29591777911836,
+    cntLane : 5
 }, {
     zone: 1,
     area: 1,
