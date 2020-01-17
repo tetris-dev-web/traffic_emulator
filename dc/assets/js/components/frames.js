@@ -12,7 +12,7 @@ function parsingFvis(data) {
                 
                 var vehicle_json = {};
                 vehicle_json.id64 = fvis_json[i].items[j].dck.id64;
-                vehicle_json.tick32 = fvis_json[i].items[j].dcv.tick32 + k + (i * 30);
+                vehicle_json.tick32 = fvis_json[i].items[j].dcv.tick32 + k + (i * FVIS_CAPTURE_STEP);
                 vehicle_json.sPt_z = getStartsPt_z(vehicle_json.id64, vehicle_json.tick32);
                 vehicle_json.pt = fvis_json[i].items[j].dcv.apts[k].pt;
                 vehicle_json.rot = fvis_json[i].items[j].dcv.apts[k].rot;
