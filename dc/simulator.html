@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>emulation</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <script src="assets/js/babylon.js"></script>
+    <style>
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-primary navbar-expand-sm" style="background-color: #e3f2fd;">
+        <a class="btn btn-primary" href='index.html' style="margin: 10px;">Back2Map</a>
+    </nav>
+    <canvas id="renderCanvas"></canvas>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="assets/js/components/ground.js"></script>
+    <script type="text/javascript" src="assets/js/components/lane.js"></script>
+    <script type="text/javascript" src="assets/js/components/frames.js"></script>
+    <script type="text/javascript" src="assets/js/components/camera.js"></script>
+    <script type="text/javascript" src="assets/js/components/light.js"></script>
+    <script type="text/javascript" src="assets/js/components/const.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_camera.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_car.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/cmeta.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_evt.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/fvis.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="config.js"></script>
+    <script>
+        function getEmetaFromRServer(cameraId, areaId, zoneId, to, from) {
+            $.ajax({
+                url: CLOUD_ENDPOINT + '/emeta',
+                type: "GET",
+                crossDomain: true,
+                data: {
+                    camera: cameraId,
+                    area: areaId,
+                    zone: zoneId
+                },
+                success: function (data_response) {
+                    var json_emeta = atob(data_response);
+                    getFvisFromRServer(cameraId, areaId, zoneId, to, from, json_emeta);
+
+                },
+                complete: function (data_response) {
+                    console.log("emeta ajax call end...");
+                }
+            });
+        }
+
+        function getFvisFromRServer(cameraId, areaId, zoneId, to, from, json_emeta) {
+            $.ajax({
+                url: CLOUD_ENDPOINT + '/fvis',
+                type: "GET",
+                crossDomain: true,
+                data: {
+                    camera: cameraId,
+                    area: areaId,
+                    zone: zoneId,
+                    to: to,
+                    from: from
+                },
+                success: function (data_response) {
+
+                    var json_fvis = atob(data_response);
+                    Main(json_fvis, json_emeta);
+
+                },
+                complete: function (data_response) {
+                    console.log("fvis ajax call end...");
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        var zoneId = 1,
+            areaId = 1,
+            cameraId = 1;
+        var to = 1577948882; //1577949180,
+        var from = 1577948881;
+
+        switch (option) {
+            case 0:         // R api call
+                getEmetaFromRServer(cameraId, areaId, zoneId, to, from);
+                break;
+            case 1:         // JS api call
+                var json_emeta = emeta_create(1, 1, 1);
+                var json_fvis = fvis_create(1, 1, 1, Math.round(Date.now() / 1000), Math.round(Date.now() / 1000) +
+                    FVIS_CAPTURE_DURATION);
+                Main(json_fvis, json_emeta);
+                break;
+            default:
+                break;
+        }
+
+        function Main(json_fvis, json_emeta) {
+            var canvas = document.getElementById("renderCanvas");
+            var engine = new BABYLON.Engine(canvas, true);
+            var createScene = function () {
+                var scene = new BABYLON.Scene(engine);
+
+                // Camera
+                var camera = new Camera(scene, canvas);
+
+                // Light
+                var light = new Light(scene);
+
+                // Ground
+                var ground = new Ground(scene);
+
+                // Lane
+                //var json_emeta = emeta_create(1, 1, 1);
+                var lane = new Lane(json_emeta, scene);
+
+                // Car, Truck, Bus
+                //var json_fvis = fvis_create(1, 1, 1, Math.round(Date.now() / 1000), Math.round(Date.now() / 1000) + FVIS_CAPTURE_DURATION);
+                //console.log(json_fvis);
+
+                createParentVehicles(scene);
+
+                parsingFvis(json_fvis);
+
+                var tick32 = g_vehicles_json[0].tick32;
+                var count_frame = 0;
+                var z_inc = 0;
+                // Animations
+                scene.registerBeforeRender(function () {
+                    count_frame++;
+                    if (count_frame % 60 == 0) {
+                        animation(tick32);
+                        tick32++;
+                    }
+                    for (var i = 0; i < g_cVehicles_len; i++) {
+                        if (g_cVehicles[i].flag == 1) {
+                            z_inc = (g_cVehicles[i].pt[2] - g_cVehicles[i].sPt_z) / (FRAMES_PER_SECOND *
+                                SCALE_METER2CM);
+                            g_cVehicles[i].instance.position.z += z_inc;
+                            // hide vehicles which has pos-z == 0
+                            if ((g_cVehicles[i].instance.position.z < 1) || (g_cVehicles[i].instance
+                                    .position
+                                    .z >
+                                    499)) {
+                                g_cVehicles[i].instance.position.y = -1000;
+                            }
+                        }
+                    }
+                });
+                return scene;
+            };
+
+            var scene = createScene();
+
+            engine.runRenderLoop(function () {
+                scene.render();
+            });
+        }
+    </script>
+
+</body>
+
+</html>
