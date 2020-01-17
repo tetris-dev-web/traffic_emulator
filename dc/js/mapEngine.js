@@ -255,3 +255,24 @@ function ControlLayers() {
 map.on('moveend', function (event) {
     ControlLayers();
 });
+
+var camera1 = L.circle([31.301549847100296, 120.03533076358959], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 50
+}).addTo(map);
+
+var camera2 = L.circle([31.305970975138788, 120.03858490589059], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 50
+}).addTo(map);
+
+var camera3 = L.circle([31.29591777911836, 120.03908113218328], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 50
+}).addTo(map);

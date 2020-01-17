@@ -35,9 +35,10 @@
     <script type="text/javascript" src="assets/js/components/const.js"></script>
     <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const.js"></script>
     <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_camera.js"></script>
-    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_car.js"></script>
-    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/cmeta.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/long.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/create_car.js"></script>
     <script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_evt.js"></script>
+    <script type="text/javascript" src="assets/js/generate_fvis_cmeta/cmeta.js"></script>
     <script type="text/javascript" src="assets/js/generate_fvis_cmeta/fvis.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -79,6 +80,7 @@
                 success: function (data_response) {
 
                     var json_fvis = atob(data_response);
+                    console.log(json_fvis);
                     Main(json_fvis, json_emeta);
 
                 },
@@ -92,10 +94,10 @@
         var zoneId = 1,
             areaId = 1,
             cameraId = 1;
-        var to = 1577948882; //1577949180,
-        var from = 1577948881;
+        var to = 1579252311; //1577949180,
+        var from = 1579252012;
 
-        switch (option) {
+        switch (version) {
             case 0:         // R api call
                 getEmetaFromRServer(cameraId, areaId, zoneId, to, from);
                 break;
@@ -103,6 +105,7 @@
                 var json_emeta = emeta_create(1, 1, 1);
                 var json_fvis = fvis_create(1, 1, 1, Math.round(Date.now() / 1000), Math.round(Date.now() / 1000) +
                     FVIS_CAPTURE_DURATION);
+                //console.log(json_fvis);
                 Main(json_fvis, json_emeta);
                 break;
             default:
@@ -151,6 +154,14 @@
                             z_inc = (g_cVehicles[i].pt[2] - g_cVehicles[i].sPt_z) / (FRAMES_PER_SECOND *
                                 SCALE_METER2CM);
                             g_cVehicles[i].instance.position.z += z_inc;
+                            //g_cVehicles[i].instance.rotation.y =  PI/2 - g_cVehicles[i].rot;
+                            if (g_cVehicles[i].rot != PI/2) {
+                                g_cVehicles[i].instance.rotation.y = PI/2 - g_cVehicles[i].rot;
+                                //console.log(g_cVehicles[i].id64);
+                                //console.log(g_cVehicles[i].rot);
+                                
+                            }
+                            
                             // hide vehicles which has pos-z == 0
                             if ((g_cVehicles[i].instance.position.z < 1) || (g_cVehicles[i].instance
                                     .position
