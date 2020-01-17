@@ -84,8 +84,9 @@ fvis <-function(from, to, zone, area, camera){
   list_tick32 = return_json_data['tick32']$tick32
   list_etick32 = return_json_data['etick32']$etick32
   
-  tick32_tag = list_tick32[[1]]
   time_array_length = lengths(return_json_data['tick32'])
+  
+  time_start = list_tick32[[1]]
 
   json_dck_dcv = ''
   json_all_dcpref = ''
@@ -94,7 +95,7 @@ fvis <-function(from, to, zone, area, camera){
   calc_count = 1
   
   while (calc_count < (time_array_length + 1)) {
-    if (tick32_tag == list_tick32[[calc_count]]) {
+    if (list_tick32[[calc_count]] >= time_start && list_tick32[[calc_count]] <= (time_start + 30)) {
       dck_dcv_step_json = sprintf('{"dck": {"op16": %d, "cla": %d, "cab64s": "%s", "cab32s": "%s", "id64": %s, "id32": %d}, "dcv": %s},', 12, as.numeric(list_cla16[[calc_count]]), list_cab64s, list_cab32s, as.bigz(list_id64[[calc_count]]), list_id32[[calc_count]], list_dcv[[calc_count]])
       json_dck_dcv = paste(json_dck_dcv, dck_dcv_step_json)
       if (calc_count == time_array_length) {
@@ -105,12 +106,14 @@ fvis <-function(from, to, zone, area, camera){
       calc_count = calc_count + 1
     } else {
       dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+      print(dcpref_step_json)
       json_dck_dcv = ''
+      time_start = list_tick32[[calc_count]]
       json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
-      tick32_tag = list_tick32[[calc_count]]
     }
   }
-
+  
+  
   dbDisconnect(data_handler)
   
   str_json = gsub("\\\\", "", jsonlite::toJSON(json_all_dcpref))
@@ -130,7 +133,6 @@ fvis <-function(from, to, zone, area, camera){
 #* @param camera -> camera number
 #* @get /evt
 evt <- function(from, to, zone, area, camera){
-  
   # dcpref value fields
   db_node_name = db_name
   op_val = 22
@@ -149,7 +151,7 @@ evt <- function(from, to, zone, area, camera){
   
   i_cab32 = i_zone * (2 ^ 26) + i_area * (2 ^ 20) + i_pad1 * (2 ^ 12) + i_camera * (2 ^ 6) + i_pad2
   
-  res_query <- dbGetQuery(data_handler, sprintf("select * from dc where (op16 = 20 AND cab32 = %d AND tick32 >= %d AND etick32 <= %d ) order by tick32 asc", i_cab32, i_from, i_to))
+  res_query <- dbGetQuery(data_handler, sprintf("select * from dc where (op16 = 20 AND cab32 = %d AND tick32 >= %d AND tick32 <= %d ) order by tick32 asc", i_cab32, i_from, i_to))
   return_json_data = res_query
   
   cab32_val = gsub(' ', '', paste(paste(paste(paste(paste(paste(paste(paste(toString(i_zone), '-'), toString(i_area)), '-'), '0'), '-'), toString(i_camera)), '-'), '0'))
@@ -183,8 +185,9 @@ evt <- function(from, to, zone, area, camera){
   list_tick32 = return_json_data['tick32']$tick32
   list_etick32 = return_json_data['etick32']$etick32
   
-  tick32_tag = list_tick32[[1]]
   time_array_length = lengths(return_json_data['tick32'])
+  
+  time_start = list_tick32[[1]]
   
   json_dck_dcv = ''
   json_all_dcpref = ''
@@ -193,7 +196,7 @@ evt <- function(from, to, zone, area, camera){
   calc_count = 1
   
   while (calc_count < (time_array_length + 1)) {
-    if (tick32_tag == list_tick32[[calc_count]]) {
+    if (list_tick32[[calc_count]] >= time_start && list_tick32[[calc_count]] <= (time_start + 30)) {
       dck_dcv_step_json = sprintf('{"dck": {"op16": %d, "cla": %d, "cab64s": "%s", "cab32s": "%s", "id64": %s, "id32": %d}, "dcv": %s},', 12, as.numeric(list_cla16[[calc_count]]), list_cab64s, list_cab32s, as.bigz(list_id64[[calc_count]]), list_id32[[calc_count]], list_dcv[[calc_count]])
       json_dck_dcv = paste(json_dck_dcv, dck_dcv_step_json)
       if (calc_count == time_array_length) {
@@ -204,11 +207,13 @@ evt <- function(from, to, zone, area, camera){
       calc_count = calc_count + 1
     } else {
       dcpref_step_json = sprintf('{"dcpref": {"cab64s": "%s", "op": %d, "ser": %d}, "items":[%s]},', db_node_name, as.numeric(op_val), as.numeric(ser_val), json_dck_dcv)
+      print(dcpref_step_json)
       json_dck_dcv = ''
+      time_start = list_tick32[[calc_count]]
       json_all_dcpref = paste(json_all_dcpref, dcpref_step_json)
-      tick32_tag = list_tick32[[calc_count]]
     }
   }
+  
   
   dbDisconnect(data_handler)
   
@@ -219,7 +224,6 @@ evt <- function(from, to, zone, area, camera){
   
   base64_enc_str = base64_enc(json_result)
   return(base64_enc_str)
-  
 }
 
 #* Get EMeta Camera from Database
