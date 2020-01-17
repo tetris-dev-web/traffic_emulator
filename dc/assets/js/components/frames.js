@@ -1,14 +1,15 @@
 function parsingFvis(data) {
     //console.log(data);
     var fvis_json = JSON.parse(data);
-    //console.log(fvis_json);
+    console.log(fvis_json);
     for (var i = 0; i < fvis_json.length; i++) { // fvis_json.length == count fvis blocks for 30s
         for (var j = 0; j < fvis_json[i].items.length; j++) { // fvis_json[i].items.length
-            //console.log(fvis_json[i].items[j].dck.id64);
+            //console.log(fvis_json[i].items[j]);
+            if (fvis_json[i].items[j].dck.op16 != DCK_OP_FVIS) {
+                continue;
+            }
             for (var k = 0; k < fvis_json[i].items[j].dcv.apts.length; k++) {
-                if (fvis_json[i].items[j].dck.op16 != DCK_OP_FVIS) {
-                    continue;
-                }
+                
                 var vehicle_json = {};
                 vehicle_json.id64 = fvis_json[i].items[j].dck.id64;
                 vehicle_json.tick32 = fvis_json[i].items[j].dcv.tick32 + k + (i * 30);

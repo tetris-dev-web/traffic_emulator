@@ -19,7 +19,7 @@ const CAMERA_DEFAULT_LANE_COUNT = 3;
 const CAMERA_DEFAULT_LAT = 31.3;
 const CAMERA_DEFAULT_LONG = 108.4
 
-const LANE_WIDE = 3; // 3 meter wide
+const LANE_WIDE = 5; // 3 meter wide
 const LANE_TYPE = 1; // 1- traffic, 2 = median, 3 = shoulder, 4 = xwalk,5 = bike, 6=inter, 7=park, 8=lane 
 const LANE_FLOW = 1; // 1-straight, 2-turn, 4-exit, 8-entrance, 16-right, 32-left, 64-uturn 
 const LANE_LINE_WIDTH = 1; // 1 pixel
@@ -30,8 +30,10 @@ const LANE_SDIFF = 10; // speed differenence between lane
 const LANE_CLR = 0; // 0 – white, 1 – yellow, 2 – red, 3 – blue
 const LANE_PTS_STEP = 100; // show pts for each 1 meter ( 100m )
 
+const FVIS_CNT_CAR_LANE = 10; // number of cars in each lane
 const FVIS_CAPTURE_DURATION = 300; // KVIS duration
 const FVIS_CAPTURE_STEP = 30; // Generate KVIS for each 30 s
 const FVIS_CAPTURE_FREQ = 1000; // miliseconds per frame
-const FVIS_CAR_DISTANCE = 5; // distance between cars(m)
+const FVIS_CAR_DISTANCE_MIN = 7; // distance between cars(m)
+const FVIS_CAR_DISTANCE_MAX = 30; // distance between cars(m)
 const CAB64 = '2-20-9-0-101-9';
