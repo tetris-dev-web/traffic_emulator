@@ -85,8 +85,6 @@ fvis <-function(from, to, zone, area, camera){
   list_etick32 = return_json_data['etick32']$etick32
   
   time_array_length = lengths(return_json_data['tick32'])
-  
-  #time_start = list_tick32[[1]]
   time_start = i_from
   
   json_dck_dcv = ''
@@ -96,7 +94,7 @@ fvis <-function(from, to, zone, area, camera){
   pack_count = 1
   
   while (calc_count < (time_array_length + 1)) {
-    if (list_tick32[[calc_count]] < (time_start + 30 * pack_count)) {
+    if (list_tick32[[calc_count]] < (time_start + 30 * pack_count - 1)) {
       dck_dcv_step_json = sprintf('{"dck": {"op16": %d, "cla": %d, "cab64s": "%s", "cab32s": "%s", "id64": %s, "id32": %d}, "dcv": %s},', 12, as.numeric(list_cla16[[calc_count]]), list_cab64s, list_cab32s, as.bigz(list_id64[[calc_count]]), list_id32[[calc_count]], list_dcv[[calc_count]])
       json_dck_dcv = paste(json_dck_dcv, dck_dcv_step_json)
       if (calc_count == time_array_length) {
