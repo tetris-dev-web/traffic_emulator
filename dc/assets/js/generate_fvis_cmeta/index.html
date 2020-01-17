@@ -1,0 +1,46 @@
+<script src = "const.js"></script>
+<script src = "const_camera.js"></script>
+<script src = "long.js"></script>
+<script src = "create_car.js"></script>
+<script src = "const_evt.js"></script>
+<script src = "cmeta.js"></script>
+<script src = "fvis.js"></script>
+<script>
+  
+// console.log(emeta_create(1, 1, 1));
+
+var fvis_data = JSON.parse(fvis_create(1, 1, 1, Math.round(Date.now()/1000), Math.round(Date.now()/1000) + FVIS_CAPTURE_DURATION));
+console.log(fvis_data.length);
+
+// EVT
+for (var i = 0; i < fvis_data.length; i ++) {
+  for (var j = 0; j < fvis_data[i].items.length; j++) {  
+    if (fvis_data[i].items[j].dck.op16 == DCK_OP_EVT) {
+      console.log(fvis_data[i].items[j]);
+    }
+  }
+}
+
+var id641 = '';
+var id642 = '';
+for (var i = 0; i < fvis_data.length; i ++) {
+  for (var j = 0; j < fvis_data[i].items.length; j++) {
+    if (fvis_data[i].items[j].dcv.apts[0].seg == 1 && id641 == '') id641 = fvis_data[i].items[j].dck.id64;
+    if (fvis_data[i].items[j].dcv.apts[0].seg == 2 && id642 == '') id642 = fvis_data[i].items[j].dck.id64;
+
+    if (fvis_data[i].items[j].dck.id64 == id641) {
+      for (var p = 0; p < fvis_data[i].items[j].dcv.apts.length; p ++) {
+        console.log('1:' + fvis_data[i].items[j].dcv.apts[p].seg + ' ' + fvis_data[i].items[j].dck.id64 + ' ' + (fvis_data[i].items[j].dcv.tick32 + p) + ' ' + fvis_data[i].items[j].dcv.apts[p].pt[0] + ' ' + fvis_data[i].items[j].dcv.apts[p].pt[2]);
+      }
+    }
+
+    if (fvis_data[i].items[j].dck.id64 == id642) {
+      for (var p = 0; p < fvis_data[i].items[j].dcv.apts.length; p ++) {
+        // console.log('2:' + fvis_data[i].items[j].dcv.apts[p].seg + ' ' + fvis_data[i].items[j].dck.id64 + ' ' + (fvis_data[i].items[j].dcv.tick32 + p) + ' ' + fvis_data[i].items[j].dcv.apts[p].pt[2]);
+      }
+    }    
+  }
+}
+
+console.log(fvis_data.length);
+</script>

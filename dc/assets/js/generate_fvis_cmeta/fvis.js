@@ -90,29 +90,30 @@ function fvis_create(idxZone, idxArea, idxCamera, startTime, endTime) {
       for (var idxCar = 0; idxCar < arrCar[i].length; idxCar++)
       for (var p = 0; p < EVT_INFO.length; p++) {
         if (idxZone == EVT_INFO[p].zone && idxArea == EVT_INFO[p].area && idxCamera == EVT_INFO[p].camera && (i + 1) == EVT_INFO[p].lane && idxCar == (EVT_INFO[p].idxCar - 1)) {
-          evtStartTime = EVT_INFO[p].startTime;
-          evtDuration = EVT_INFO[p].duration;
-          evtTyp = EVT_INFO[p].typ;
-          evtIdxCar = idxCar;
+          if (typeof arrCar[i][idxCar].evt == 'undefined') {
+            evtStartTime = EVT_INFO[p].startTime;
+            evtDuration = EVT_INFO[p].duration;
+            evtTyp = EVT_INFO[p].typ;
+            evtIdxCar = idxCar;
 
-          // Define EVT dck
-          itemEVT4Car.dck = {
-            op16 : DCK_OP_EVT,
-            cla : DCK_CLA,
-            clb : EVT_INFO[p].clb,
-            cab64s : cab64,
-            cab32s : cab32,
-            id64 : arrCar[i][idxCar].id64,
-            id32 : 0,
-            tick32 : time,
-            tick16 : EVT_INFO[p].tick16,
-            ref64 : ((time) * 65536) + EVT_INFO[p].tick16,
-            ref32 : 0
-          };
+            // Define EVT dck
+            itemEVT4Car.dck = {
+              op16 : DCK_OP_EVT,
+              cla : DCK_CLA,
+              clb : EVT_INFO[p].clb,
+              cab64s : cab64,
+              cab32s : cab32,
+              id64 : arrCar[i][idxCar].id64,
+              id32 : 0,
+              tick32 : time,
+              tick16 : EVT_INFO[p].tick16,
+              ref64 : ((time) * 65536) + EVT_INFO[p].tick16,
+              ref32 : 0
+            };
 
-          // Mark the evt is not started
-          if (typeof arrCar[i][idxCar].evt == 'undefined') arrCar[i][idxCar].evt = 0;
-
+            // Mark the evt is not started
+            arrCar[i][idxCar].evt = 0;
+          }
           break;
         }
       }
