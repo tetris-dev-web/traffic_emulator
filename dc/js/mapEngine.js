@@ -156,7 +156,7 @@ L.icon = function (options) {
 for (var i = 0; i < CAMERA_INFO.length; i++) {
     var camera = L.marker([CAMERA_INFO[i].long, CAMERA_INFO[i].lat], {
         icon: cameraIcon
-    }).bindPopup("Zone ID: " + CAMERA_INFO[i].zone + "<br>Area ID: " + CAMERA_INFO[i].area + "<br>Camera ID: " + CAMERA_INFO[i].camera + "<br><a href='simulator.html' onclick=''>View</a>");
+    }).bindPopup("Zone ID: " + CAMERA_INFO[i].zone + "<br>Area ID: " + CAMERA_INFO[i].area + "<br>Camera ID: " + CAMERA_INFO[i].camera + "<br><a href='simulator.html?zone="+CAMERA_INFO[i].zone+"&area="+CAMERA_INFO[i].area+"&camera="+CAMERA_INFO[i].camera+"'>View</a>");
     cameras[cnt_cameras++] = camera;
 }
 /*

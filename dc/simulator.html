@@ -91,11 +91,13 @@
         }
     </script>
     <script type="text/javascript">
-        var zoneId = 1,
-            areaId = 1,
-            cameraId = 1;
+        
         var to = 1579252311; //1577949180,
         var from = 1579252012;
+        var urlParams = new URLSearchParams(window.location.search);
+        var zoneId = urlParams.get('zone'),
+            areaId = urlParams.get('area'),
+            cameraId = urlParams.get('camera');
 
         switch (version) {
             case 0:         // R api call
