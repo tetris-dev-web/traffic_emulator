@@ -48,17 +48,17 @@
         <div class="row" style="margin-top: 1rem;">
           <div class="col" id="map" style="height: 30rem; border-color: white; border-style: solid; border-width: .5rem; border-radius: .25rem;"></div>
           <div class="col">
-            <div style="margin-top: 2rem; margin-left: 2rem;">
+            <div style="margin-top: 2.5rem; margin-left: 2rem;">
               <canvas id="barChart_1"></canvas>
             </div>
           </div>
         </div>
         <!--Second Chart Component Section-->
-        <div class="row" style="margin-top: 1rem;">
-          <div class="col" style="margin-right: 1rem; height: 400px;">
+        <div class="row" style="margin-top: 1rem; margin-bottom: 5rem;">
+          <div class="col" style="margin-right: 1rem; height: 400px; margin-top: 2.5rem;">
             <canvas id="barChart_2"></canvas>
           </div>
-          <div class="col" style="margin-right: 1rem; height: 400px;">
+          <div class="col" style="margin-right: 1rem; height: 400px; margin-top: 2.5rem;">
             <canvas id="barChart_3"></canvas>
           </div>
         </div>
@@ -117,7 +117,67 @@
     var ctx_2 = canvas_2.getContext('2d');
     var ctx_3 = canvas_3.getContext('2d');
     
-    var data = {
+    var data_1 = {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      datasets: 
+      [
+        {
+          label: "Nike",
+          backgroundColor: "#ff0000",
+          hoverBackgroundColor: "#ff0000",
+          borderColor: "#ff0000", // The main line color
+          hoverBorderColor: "#00000033",
+          borderWidth: 2,
+          hoverBorderWidth: 1,
+          // notice the gap in the data and the spanGaps: true
+          data: [65, 59, 80, 81, 56, 55, 40, 13, 60, 55, 30, 78],
+          borderSkipped: false
+        },
+        {
+          label: "Adidas",
+          backgroundColor: "#ff9900",
+          hoverBorderColor: "#00000033",
+          borderWidth: 2,
+          borderColor: '#ff9900',
+          hoverBackgroundColor: "#ff9900",
+          hoverBorderWidth: 1,
+          // notice the gap in the data and the spanGaps: false
+          data: [10, 20, 60, 95, 64, 78, 90, 20, 70, 40, 70, 89],
+          borderSkipped: false
+        }
+      ]
+    };
+    var data_2 = {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      datasets: 
+      [
+        {
+          label: "Nike",
+          backgroundColor: "#ff0000",
+          hoverBackgroundColor: "#ff0000",
+          borderColor: "#ff0000", // The main line color
+          hoverBorderColor: "#00000033",
+          borderWidth: 2,
+          hoverBorderWidth: 1,
+          // notice the gap in the data and the spanGaps: true
+          data: [65, 59, 80, 81, 56, 55, 40, 13, 60, 55, 30, 78],
+          borderSkipped: false
+        },
+        {
+          label: "Adidas",
+          backgroundColor: "#ff9900",
+          hoverBorderColor: "#00000033",
+          borderWidth: 2,
+          borderColor: '#ff9900',
+          hoverBackgroundColor: "#ff9900",
+          hoverBorderWidth: 1,
+          // notice the gap in the data and the spanGaps: false
+          data: [10, 20, 60, 95, 64, 78, 90, 20, 70, 40, 70, 89],
+          borderSkipped: false
+        }
+      ]
+    };
+    var data_3 = {
       labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       datasets: 
       [
@@ -149,7 +209,7 @@
     };
 
     // Notice the scaleLabel at the same level as Ticks
-    var options = {
+    var options_1 = {
       hover: {
         mode: 'index',
         intersect: true
@@ -173,15 +233,15 @@
         bodySpacing:        6,
         caretPadding:       16,    
         callbacks: {
-          title: function(tooltipItem, data) {
+          title: function(tooltipItem, data_1) {
             var total = 0;
             for (var i=0; i<tooltipItem.length ; i++) {
               total += (1 * tooltipItem[i].value) || 0
             }
             return [tooltipItem[0].label + ' 2019 ', total + ' Posts & reposts']
             },
-           label: function(tooltipItem, data) {
-            return ' ' + data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value;
+           label: function(tooltipItem, data_1) {
+            return ' ' + data_1.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value;
           }
         }
       },
@@ -219,26 +279,166 @@
         }
       }
     };
+    var options_2 = {
+      hover: {
+        mode: 'index',
+        intersect: true
+      },
+      tooltips:{
+        mode: 'index',
+        intersect: true,
+        position: 'average',
+        filter: (item) => (item.value !=='NaN' && 1 * item.value > 0),
+        backgroundColor:    '#202631',
+        bodyFontColor:      '#fff',
+        titleFontSize:      14,
+        titleFontColor:     '#fff',
+        bodyFontSize:       12,
+        footerFontSize:     14,
+        xPadding:           16,
+        yPadding:           16,
+        cornerRadius:       8,
+        titleSpacing:       6,
+        titleMarginBottom:  12,
+        bodySpacing:        6,
+        caretPadding:       16,    
+        callbacks: {
+          title: function(tooltipItem, data_2) {
+            var total = 0;
+            for (var i=0; i<tooltipItem.length ; i++) {
+              total += (1 * tooltipItem[i].value) || 0
+            }
+            return [tooltipItem[0].label + ' 2019 ', total + ' Posts & reposts']
+            },
+           label: function(tooltipItem, data_2) {
+            return ' ' + data_2.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value;
+          }
+        }
+      },
+      legend:{
+        display: false
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero:true
+            },
+            stacked: true
+          }
+        ],
+        xAxes: [
+          {
+            stacked: true
+          }
+        ]
+      },
+      plugins: {
+        crosshair:{
+            line: {
+              color: '#00000099',        // crosshair line color
+              width: 1,             // crosshair line width
+              dashPattern: [5, 5]   // crosshair line dash pattern
+            },
+            zoom: {
+              enabled: false
+            },
+            snap: {
+              enabled: false
+            }
+        }
+      }
+    };
+    var options_3 = {
+      hover: {
+        mode: 'index',
+        intersect: true
+      },
+      tooltips:{
+        mode: 'index',
+        intersect: true,
+        position: 'average',
+        filter: (item) => (item.value !=='NaN' && 1 * item.value > 0),
+        backgroundColor:    '#202631',
+        bodyFontColor:      '#fff',
+        titleFontSize:      14,
+        titleFontColor:     '#fff',
+        bodyFontSize:       12,
+        footerFontSize:     14,
+        xPadding:           16,
+        yPadding:           16,
+        cornerRadius:       8,
+        titleSpacing:       6,
+        titleMarginBottom:  12,
+        bodySpacing:        6,
+        caretPadding:       16,    
+        callbacks: {
+          title: function(tooltipItem, data_3) {
+            var total = 0;
+            for (var i=0; i<tooltipItem.length ; i++) {
+              total += (1 * tooltipItem[i].value) || 0
+            }
+            return [tooltipItem[0].label + ' 2019 ', total + ' Posts & reposts']
+            },
+           label: function(tooltipItem, data_3) {
+            return ' ' + data_3.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value;
+          }
+        }
+      },
+      legend:{
+        display: false
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero:true
+            },
+            stacked: false
+          }
+        ],
+        xAxes: [
+          {
+            stacked: false
+          }
+        ]
+      },
+      plugins: {
+        crosshair:{
+            line: {
+              color: '#00000099',        // crosshair line color
+              width: 1,             // crosshair line width
+              dashPattern: [5, 5]   // crosshair line dash pattern
+            },
+            zoom: {
+              enabled: false
+            },
+            snap: {
+              enabled: false
+            }
+        }
+      }
+    };
 
     // Chart declaration:
     var chart_1 = new Chart(ctx_1, {
       type: 'bar',
-      data: data,
-      options: options
+      data: data_1,
+      options: options_1
     });
 
     // Chart declaration:
     var chart_2 = new Chart(ctx_2, {
-      type: 'bar',
-      data: data,
-      options: options
+      type: 'line',
+      data: data_2,
+      options: options_2
     });
 
     // Chart declaration:
     var chart_3 = new Chart(ctx_3, {
-      type: 'bar',
-      data: data,
-      options: options
+      type: 'line',
+      data: data_3,
+      options: options_3
     });
   </script>
 </body>
