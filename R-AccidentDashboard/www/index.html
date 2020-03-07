@@ -11,7 +11,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+  <script src="https://chartjs-plugin-crosshair.netlify.com/chartjs-plugin-crosshair.js"></script>
   
   <script src="shared/jquery.js" type="text/javascript"></script>
   <script src="shared/shiny.js" type="text/javascript"></script>
@@ -19,7 +20,6 @@
 </head>
 
 <body style = "background-color: #172B4D;">
-
   <div style="position: relative; min-height: 100vh;">
     <div style="padding-bottom: 5rem;">
       <div style="color: white; height: 7.5rem; text-align: center; padding-top: 2rem;">
@@ -44,17 +44,25 @@
            <div style="font-size: 1.2rem; font-weight: 500;">Car: 43% | Bus: 43% | Truck: 43%</div>
           </div>
         </div>
-        
+        <!--First Map and Chart Component Section-->
         <div class="row" style="margin-top: 1rem;">
           <div class="col" id="map" style="height: 30rem; border-color: white; border-style: solid; border-width: .5rem; border-radius: .25rem;"></div>
           <div class="col">
-            <div style="margin-top: 5rem; margin-left: 2rem;">
-              <canvas id="barChart"></canvas>
+            <div style="margin-top: 2rem; margin-left: 2rem;">
+              <canvas id="barChart_1"></canvas>
             </div>
           </div>
-          
         </div>
-    </div>
+        <!--Second Chart Component Section-->
+        <div class="row" style="margin-top: 1rem;">
+          <div class="col" style="margin-right: 1rem; height: 400px;">
+            <canvas id="barChart_2"></canvas>
+          </div>
+          <div class="col" style="margin-right: 1rem; height: 400px;">
+            <canvas id="barChart_3"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
     <div style="position: absolute; bottom: 0; width: 100%; height: 5rem; color: white; text-align: center;">
       <div style="padding-top: 2rem;">
@@ -64,7 +72,6 @@
   </div>
 
   <script>
-  
     // add marker on map
     data = [
       {lat: 31.497555, lon: 120.317609},
@@ -72,7 +79,6 @@
       {lat: 31.474463, lon: 120.356491},
       {lat: 31.465495, lon: 120.348036}
     ];
-
     // define map instance
     var map = L.map('map', {
       center: [data[0].lat,data[0].lon],
@@ -95,9 +101,22 @@
       L.marker(pos,{icon: icon}).addTo(map);
     });
     
+
+
+
+    // place chart components
+    Chart.defaults.global.defaultFontColor = 'white';
+    Chart.defaults.global.defaultFontSize = 18;
+
     // add chart component
-    var canvas = document.getElementById("barChart");
-    var ctx = canvas.getContext('2d');
+    var canvas_1 = document.getElementById("barChart_1");
+    var canvas_2 = document.getElementById("barChart_2");
+    var canvas_3 = document.getElementById("barChart_3");
+    
+    var ctx_1 = canvas_1.getContext('2d');
+    var ctx_2 = canvas_2.getContext('2d');
+    var ctx_3 = canvas_3.getContext('2d');
+    
     var data = {
       labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       datasets: 
@@ -105,29 +124,30 @@
         {
           label: "Nike",
           backgroundColor: "#ff0000",
-          //hoverBackgroundColor: "#ff0000",
-          //borderColor: "#ff0000", // The main line color
-          //hoverBorderColor: "#00000033",
-          //borderWidth: 2,
-          //hoverBorderWidth: 1,
+          hoverBackgroundColor: "#ff0000",
+          borderColor: "#ff0000", // The main line color
+          hoverBorderColor: "#00000033",
+          borderWidth: 2,
+          hoverBorderWidth: 1,
           // notice the gap in the data and the spanGaps: true
-          data: [65, 59, 80, 81, 56, 55, 40, ,60,55,30,78],
-          //borderSkipped: false
+          data: [65, 59, 80, 81, 56, 55, 40, 13, 60, 55, 30, 78],
+          borderSkipped: false
         },
         {
           label: "Adidas",
           backgroundColor: "#ff9900",
-          /*hoverBorderColor: "#00000033",
+          hoverBorderColor: "#00000033",
           borderWidth: 2,
           borderColor: '#ff9900',
           hoverBackgroundColor: "#ff9900",
-          hoverBorderWidth: 1,*/
+          hoverBorderWidth: 1,
           // notice the gap in the data and the spanGaps: false
-          data: [10, 20, 60, 95, 64, 78, 90,20,70,40,70,89],
-          //borderSkipped: false
+          data: [10, 20, 60, 95, 64, 78, 90, 20, 70, 40, 70, 89],
+          borderSkipped: false
         }
       ]
     };
+
     // Notice the scaleLabel at the same level as Ticks
     var options = {
       hover: {
@@ -152,7 +172,7 @@
         titleMarginBottom:  12,
         bodySpacing:        6,
         caretPadding:       16,    
-        /*callbacks: {
+        callbacks: {
           title: function(tooltipItem, data) {
             var total = 0;
             for (var i=0; i<tooltipItem.length ; i++) {
@@ -164,7 +184,6 @@
             return ' ' + data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value;
           }
         }
-        */
       },
       legend:{
         display: false
@@ -195,13 +214,28 @@
               enabled: false
             },
             snap: {
-              enabled: true
+              enabled: false
             }
         }
       }
     };
+
     // Chart declaration:
-    var myBarChart = new Chart(ctx, {
+    var chart_1 = new Chart(ctx_1, {
+      type: 'bar',
+      data: data,
+      options: options
+    });
+
+    // Chart declaration:
+    var chart_2 = new Chart(ctx_2, {
+      type: 'bar',
+      data: data,
+      options: options
+    });
+
+    // Chart declaration:
+    var chart_3 = new Chart(ctx_3, {
       type: 'bar',
       data: data,
       options: options
