@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,8 +79,7 @@
           
         </div>
         
-        
-        
+
         <!--First Map and Chart Component Section-->
         <div class="row" style="margin-top: 1rem;">
           <div class="col" 
@@ -108,37 +107,37 @@
 
   <script>
     // add marker on map
-    data = [
-      {lat: 31.497555, lon: 120.317609},
-      {lat: 31.513837, lon: 120.356662},
-      {lat: 31.474463, lon: 120.356491},
-      {lat: 31.465495, lon: 120.348036}
-    ];
+    Shiny.addCustomMessageHandler("sendCameraPosition",
+      function(posData) {
+        var data = [];
+
+        for(var i=0; i < posData.length / 2; i++){
+          data.push({'lat':posData[i], 'lon': posData[i + posData.length / 2]});
+        }
+
+        // define map instance
+        var map = L.map('map', {
+          center: [data[0].lat,data[0].lon],
+          zoom: 13.2
+        });
+        
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
     
-    // define map instance
-    var map = L.map('map', {
-      center: [data[0].lat,data[0].lon],
-      zoom: 13.2
-    });
+        data.forEach(function(row){
+          var pos = new L.LatLng(row.lat,row.lon);
+          var icontext = row.content;
     
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-    data.forEach(function(row){
-      var pos = new L.LatLng(row.lat,row.lon);
-      var icontext = row.content;
-
-      var icon = L.divIcon({
-       iconSize:null,
-       html:'<div class="map-label"></div>'
-      });
-
-      // reference marker
-      L.marker(pos).addTo(map); 
-      L.marker(pos,{icon: icon}).addTo(map);
-    });
+          var icon = L.divIcon({
+           iconSize:null,
+           html:'<div class="map-label"></div>'
+          });
     
-
-
+          // reference marker
+          L.marker(pos).addTo(map); 
+          L.marker(pos,{icon: icon}).addTo(map);
+        });
+      }
+    );
 
     // place chart components
     Chart.defaults.global.defaultFontColor = 'white';

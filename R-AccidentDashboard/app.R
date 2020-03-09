@@ -15,7 +15,11 @@ injury_light_count <- 235
 injury_severe_count <- 82
 
 
-server <- function(input, output) {
+pos_lat <- c(31.497555, 31.513837, 31.474463, 31.465495)
+pos_lon <- c(120.317609, 120.356662, 120.356491, 120.348036)
+
+
+server <- function(input, output, session) {
   output$crashes_status <- renderPrint({
     tags$b(crash_status_label, style = "color: white; font-size: 2rem; font-weight: bolder;")
   })
@@ -56,7 +60,9 @@ server <- function(input, output) {
   
   
   #place leaflet map in html component
-
+  observe({
+    session$sendCustomMessage("sendCameraPosition", c(pos_lat, pos_lon))
+  })
   
 }
 
