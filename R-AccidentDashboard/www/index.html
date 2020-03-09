@@ -26,33 +26,77 @@
         <span style="font-size: 2rem; font-weight: bolder;">Car Accident Statistics Dashboard</span>
       </div>
       <div style="margin-left: 5rem; margin-right: 5rem;">
+        
+        
+        
+        <!--show car accient counts-->
         <div class="row">
-          <div class="col" style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;">
-            <div style="font-size: 2rem; font-weight: bolder;">Crashes</div>
-            <div style="font-size: 1.2rem; font-weight: 500;">Car: 43% | Bus: 43% | Truck: 43%</div>
+          <div 
+            class="col"
+            style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;"
+          >
+            <div 
+              id="crashes_status" 
+              class="shiny-html-output"
+              style="font-size: 2rem; font-weight: bolder;"
+            ></div>
+            <div 
+              style="font-size: 1.2rem; font-weight: 500;"
+            >
+                Car: <span id="crashes_car" class="shiny-html-output"></span>% | Bus: <span id="crashes_bus" class="shiny-html-output"></span>% | Truck: <span id="crashes_truck" class="shiny-html-output"></span>%
+            </div>
           </div>
-          <div class="col" style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;">
-            <div style="font-size: 2rem; font-weight: bolder;">Crashes</div>
-            <div style="font-size: 1.2rem; font-weight: 500;">Car: 43% | Bus: 43% | Truck: 43%</div>
+          <div 
+            class="col"
+            style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;"
+          >
+            <div 
+              id="accident_status" 
+              class="shiny-html-output"
+              style="font-size: 2rem; font-weight: bolder;"
+            ></div>
+            <div 
+              style="font-size: 1.2rem; font-weight: 500;"
+            >
+                Car: <span id="accident_car" class="shiny-html-output"></span>% | Bus: <span id="accident_bus" class="shiny-html-output"></span>% | Truck: <span id="accident_truck" class="shiny-html-output"></span>%
+            </div>
           </div>
-          <div class="col" style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;">
-            <div style="font-size: 2rem; font-weight: bolder;">Crashes</div>
-           <div style="font-size: 1.2rem; font-weight: 500;">Car: 43% | Bus: 43% | Truck: 43%</div>
+          <div 
+            class="col"
+            style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;"
+          >
+            <div 
+              id="injury_status" 
+              class="shiny-html-output"
+              style="font-size: 2rem; font-weight: bolder;"
+            ></div>
+            <div 
+              style="font-size: 1.2rem; font-weight: 500;"
+            >
+                Light Injury: <span id="injury_light" class="shiny-html-output"></span> | Severe Injury: <span id="injury_severe" class="shiny-html-output"></span>
+            </div>
           </div>
-          <div class="col" style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;">
-            <div style="font-size: 2rem; font-weight: bolder;">Crashes</div>
-           <div style="font-size: 1.2rem; font-weight: 500;">Car: 43% | Bus: 43% | Truck: 43%</div>
-          </div>
+          
         </div>
+        
+        
+        
         <!--First Map and Chart Component Section-->
         <div class="row" style="margin-top: 1rem;">
-          <div class="col" id="map" style="height: 30rem; border-color: white; border-style: solid; border-width: .5rem; border-radius: .25rem;"></div>
+          <div class="col" 
+            id="map"
+            style="height: 30rem; border-color: white; border-style: solid; border-width: .5rem; border-radius: .25rem;"
+          ></div>
           <div class="col">
-            <div style="margin-top: 2.5rem; margin-left: 2rem;">
+            <div 
+              style="margin-top: 2.5rem; margin-left: 2rem;"
+            >
               <canvas id="barChart_1"></canvas>
             </div>
           </div>
         </div>
+        
+        
       </div>
     </div>
     <div style="position: absolute; bottom: 0; width: 100%; height: 5rem; color: white; text-align: center;">
@@ -70,6 +114,7 @@
       {lat: 31.474463, lon: 120.356491},
       {lat: 31.465495, lon: 120.348036}
     ];
+    
     // define map instance
     var map = L.map('map', {
       center: [data[0].lat,data[0].lon],
