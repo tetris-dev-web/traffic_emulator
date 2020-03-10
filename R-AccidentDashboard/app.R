@@ -19,6 +19,10 @@ pos_lat <- c(31.497555, 31.513837, 31.474463, 31.465495)
 pos_lon <- c(120.317609, 120.356662, 120.356491, 120.348036)
 
 
+chartTitle <- c("Crashes", "Accidents", "Injuries")
+chartValue <- c(56.3, 43.9, 82.3)
+
+
 server <- function(input, output, session) {
   output$crashes_status <- renderPrint({
     tags$b(crash_status_label, style = "color: white; font-size: 2rem; font-weight: bolder;")
@@ -59,9 +63,14 @@ server <- function(input, output, session) {
   })
   
   
+  output$chart_title <- renderPrint({
+    tags$b("Car Accident Chart", style = "color: white; font-size: 2rem; font-weight: bolder;")
+  })
+  
   #place leaflet map in html component
   observe({
     session$sendCustomMessage("sendCameraPosition", c(pos_lat, pos_lon))
+    session$sendCustomMessage("sendChartData", c(chartTitle, chartValue))
   })
   
 }

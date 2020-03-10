@@ -36,11 +36,11 @@
             style="background-color: #fb6340; color: white; border-radius: .5rem; padding: 1rem; margin: 1rem;"
           >
             <div 
-              id="crashes_status" 
+              id="crashes_status"
               class="shiny-html-output"
               style="font-size: 2rem; font-weight: bolder;"
             ></div>
-            <div 
+            <div
               style="font-size: 1.2rem; font-weight: 500;"
             >
                 Car: <span id="crashes_car" class="shiny-html-output"></span>% | Bus: <span id="crashes_bus" class="shiny-html-output"></span>% | Truck: <span id="crashes_truck" class="shiny-html-output"></span>%
@@ -78,7 +78,6 @@
           </div>
           
         </div>
-        
 
         <!--First Map and Chart Component Section-->
         <div class="row" style="margin-top: 1rem;">
@@ -88,8 +87,11 @@
           ></div>
           <div class="col">
             <div 
-              style="margin-top: 2.5rem; margin-left: 2rem;"
+              style="margin-top: 2rem; margin-left: 2rem;"
             >
+              <div style="text-align: center; margin-bottom: .5rem;">
+                <span id="chart_title" class="shiny-html-output"></span>
+              </div>
               <canvas id="barChart_1"></canvas>
             </div>
           </div>
@@ -128,42 +130,41 @@
           var icontext = row.content;
     
           var icon = L.divIcon({
-           iconSize:null,
+           iconSize: null,
            html:'<div class="map-label"></div>'
           });
     
           // reference marker
-          L.marker(pos).addTo(map); 
+          L.marker(pos).addTo(map);
           L.marker(pos,{icon: icon}).addTo(map);
         });
       }
     );
 
-    // place chart components
     Chart.defaults.global.defaultFontColor = 'white';
     Chart.defaults.global.defaultFontSize = 18;
 
-    // add chart component
-    var canvas_1 = document.getElementById("barChart_1");
-    
-    var ctx_1 = canvas_1.getContext('2d');
-    
-    var data_1 = {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    Shiny.addCustomMessageHandler("sendChartData", function(data) {
+      var canvas_1 = document.getElementById("barChart_1");
+      var ctx_1 = canvas_1.getContext('2d');
+      
+      var chartLabel = [];
+      var chartData = [];
+      
+      for(var i = 0; i < data.length / 2; i++) {
+        chartLabel.push(data[i]);
+      }
+      
+      var count = 0;
+      for(var i = data.length / 2; i < data.length; i++) {
+        chartData[count] = data[i];
+        count++;
+      }
+      
+      var data_1 = {
+      labels: chartLabel,
       datasets: 
       [
-        {
-          label: "Nike",
-          backgroundColor: "#ff0000",
-          hoverBackgroundColor: "#ff0000",
-          borderColor: "#ff0000", // The main line color
-          hoverBorderColor: "#00000033",
-          borderWidth: 2,
-          hoverBorderWidth: 1,
-          // notice the gap in the data and the spanGaps: true
-          data: [65, 59, 80, 81, 56, 55, 40, 13, 60, 55, 30, 78],
-          borderSkipped: false
-        },
         {
           label: "Adidas",
           backgroundColor: "#ff9900",
@@ -172,15 +173,13 @@
           borderColor: '#ff9900',
           hoverBackgroundColor: "#ff9900",
           hoverBorderWidth: 1,
-          // notice the gap in the data and the spanGaps: false
-          data: [10, 20, 60, 95, 64, 78, 90, 20, 70, 40, 70, 89],
-          borderSkipped: false
+          spanGaps: true,
+          data: chartData,
+          borderSkipped: true
         }
       ]
     };
-
-    // Notice the scaleLabel at the same level as Ticks
-    var options_1 = {
+      var options_1 = {
       hover: {
         mode: 'index',
         intersect: true
@@ -209,7 +208,7 @@
             for (var i=0; i<tooltipItem.length ; i++) {
               total += (1 * tooltipItem[i].value) || 0
             }
-            return [tooltipItem[0].label + ' 2019 ', total + ' Posts & reposts']
+            return [tooltipItem[0].label, total + ' Report']
             },
            label: function(tooltipItem, data_1) {
             return ' ' + data_1.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.value;
@@ -237,9 +236,9 @@
       plugins: {
         crosshair:{
             line: {
-              color: '#00000099',        // crosshair line color
-              width: 1,             // crosshair line width
-              dashPattern: [5, 5]   // crosshair line dash pattern
+              color: '#00000099',
+              width: 1,
+              dashPattern: [5, 5]
             },
             zoom: {
               enabled: false
@@ -250,12 +249,11 @@
         }
       }
     };
-
-    // Chart declaration:
-    var chart_1 = new Chart(ctx_1, {
-      type: 'bar',
-      data: data_1,
-      options: options_1
+      var chart_1 = new Chart(ctx_1, {
+        type: 'bar',
+        data: data_1,
+        options: options_1
+      });
     });
   </script>
 </body>
