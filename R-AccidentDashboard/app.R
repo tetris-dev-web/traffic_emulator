@@ -24,6 +24,8 @@ chartValue <- c(56.3, 43.9, 82.3)
 
 
 server <- function(input, output, session) {
+  
+
   output$crashes_status <- renderPrint({
     tags$b(crash_status_label, style = "color: white; font-size: 2rem; font-weight: bolder;")
   })
@@ -62,9 +64,8 @@ server <- function(input, output, session) {
     tags$b(injury_severe_count, style = "color: white;")
   })
   
-  
   output$chart_title <- renderPrint({
-    tags$b("Car Accident Chart", style = "color: white; font-size: 2rem; font-weight: bolder;")
+    tags$b("Car Accident Chart", style = "color: white; font-size: 1.5rem; font-weight: bolder;")
   })
   
   #place leaflet map in html component

@@ -123,6 +123,7 @@
           zoom: 13.2
         });
         
+        
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
     
         data.forEach(function(row){
@@ -135,11 +136,15 @@
           });
     
           // reference marker
-          L.marker(pos).addTo(map);
-          L.marker(pos,{icon: icon}).addTo(map);
+          var marker = L.marker(pos).addTo(map).bindPopup("Camera Position: " + "Lat:" + pos.lat + " Lng:" + pos.lng);
+          marker.on("click", onShowCameraGeoPositionData);
         });
       }
     );
+    
+    function onShowCameraGeoPositionData(event) {
+      console.log('Camera Position:', event.latlng.lat, event.latlng.lng);
+    }
 
     Chart.defaults.global.defaultFontColor = 'white';
     Chart.defaults.global.defaultFontSize = 18;
