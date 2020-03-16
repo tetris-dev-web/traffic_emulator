@@ -25,7 +25,7 @@
 
 <body>
   
-  <div id="infoPanel" style="position: absolute; z-index: 9; background-color: #fff; text-align: center; border: 1px solid #d3d3d3; width: 25rem; height: 45rem; left: 50px; top: 20px;">
+  <div id="infoPanel" style="position: absolute; z-index: 9; background-color: #fff; text-align: center; border: 1px solid #d3d3d3; width: 25rem; height: 50rem; left: 50px; top: 20px;">
     <div id="infoPanelHeader" style="padding: 10px; cursor: move; z-index: 10; background-color: #2196F3; color: #fff;">
       <span style="font-size: 1.5rem; font-weight: bolder;">ACCIDENT STATISTICS PANEL</span>
     </div>
@@ -104,8 +104,44 @@
           <canvas id="barChart"></canvas>
         </div>
         
+        <div>
+          <canvas id="plotChart"></canvas>
+        </div>
+        
         
       </div>
+    </div>
+  </div>
+  
+  <div style="
+    position: absolute; 
+    z-index: 9; 
+    background-color: #fff; 
+    text-align: left; 
+    border: 1px solid #d3d3d3; 
+    top: calc(100vh - 6.6rem); 
+    left: 50px;
+    font-size: 1rem;
+    font-weight: bolder;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+  ">
+    <div>
+      <span style="background-color: red; display: block; float: left; margin-right: 10px; width: 15px; height: 15px; margin-top: 5px; border-radius: 50%">
+      </span>
+      Accident 1
+    </div>
+    <div>
+      <span style="background-color: pink; display: block; float: left; margin-right: 10px; width: 15px; height: 15px; margin-top: 5px; border-radius: 50%">
+      </span>
+      Accident 2
+    </div>
+    <div>
+      <span style="background-color: orange; display: block; float: left; margin-right: 10px; width: 15px; height: 15px; margin-top: 5px; border-radius: 50%">
+      </span>
+      Accident 3
     </div>
   </div>
   
@@ -116,8 +152,8 @@
   <script>
     
     var filterOptionData = {
-      startDate: 0,
-      endDate: 0,
+      startDate: "",
+      endDate: "",
       
       accident_1: false,
       accident_2: false,
@@ -163,10 +199,10 @@
           var circle = L.circle([pos.lat, pos.lng], {
               color: '#f03',
               fillColor: '#f03',
-              fillOpacity: 0.34,
-              opacity: 0.34,
+              fillOpacity: 1,
+              opacity: 1,
               weight: 2,
-              radius: 150
+              radius: 250
           }).addTo(map).bindPopup("Camera Position: " + "Lat:" + pos.lat + " Lng:" + pos.lng);;
           circle.on("click", onShowCameraGeoPositionData);
         });
@@ -213,32 +249,12 @@
       }
     }
 
-    function showStatistics() {
-      var check_acc_1 = document.getElementById("idAccident_1");
-      var check_acc_2 = document.getElementById("idAccident_2");
-      var check_acc_3 = document.getElementById("idAccident_3");
-      
-      var check_wea_1 = document.getElementById("idWeather_sp");
-      var check_wea_2 = document.getElementById("idWeather_su");
-      var check_wea_3 = document.getElementById("idWeather_au");
-      var check_wea_4 = document.getElementById("idWeather_wi");
-      
-      filterOptionData.accident_1 = check_acc_1.checked;
-      filterOptionData.accident_2 = check_acc_2.checked;
-      filterOptionData.accident_3 = check_acc_3.checked;
-      
-      filterOptionData.weather_sp = check_wea_1.checked;
-      filterOptionData.weather_su = check_wea_2.checked;
-      filterOptionData.weather_au = check_wea_3.checked;
-      filterOptionData.weather_wi = check_wea_4.checked;
-      
-      console.log(filterOptionData);
-      
-    }
-
     var canvas = document.getElementById("barChart");
     var ctx = canvas.getContext('2d');
-
+    
+    var canvas_plot = document.getElementById("plotChart");
+    var ctx_plot = canvas_plot.getContext('2d');
+    
     // Global Options:
     Chart.defaults.global.defaultFontColor = 'black';
     Chart.defaults.global.defaultFontSize = 12;
@@ -350,6 +366,92 @@
         options: options
       });
     })
+    
+    
+    Shiny.addCustomMessageHandler("sendPlotData", function(data) {
+      var data = [
+        {
+          x: 5,
+          y: 4
+        },
+        {
+          x: 2,
+          y: 2
+        },
+        {
+          x: 4,
+          y: 5
+        },
+        {
+          x: 2,
+          y: 2
+        },
+        {
+          x: 3,
+          y: 4
+        },
+        {
+          x: 3,
+          y: 5
+        },
+        {
+          x: 3,
+          y: 1
+        },
+        {
+          x: 6,
+          y: 6
+ 
+        }
+      ];
+      
+      var options = {responsive: true, maintainAspectRatio: false};
+      
+      var plotChart = new Chart(ctx_plot, {
+        type: 'scatter',
+          data: {
+            datasets: [{
+              label: 'Statistics Scater',
+              data: data,
+              borderColor: '#2196f3',
+              backgroundColor: '#2196f3',
+            }]
+          },
+          options: options
+      });
+      
+    })
+    
+    
+    function showStatistics() {
+      var check_acc_1 = document.getElementById("idAccident_1");
+      var check_acc_2 = document.getElementById("idAccident_2");
+      var check_acc_3 = document.getElementById("idAccident_3");
+      
+      var check_wea_1 = document.getElementById("idWeather_sp");
+      var check_wea_2 = document.getElementById("idWeather_su");
+      var check_wea_3 = document.getElementById("idWeather_au");
+      var check_wea_4 = document.getElementById("idWeather_wi");
+      
+      filterOptionData.accident_1 = check_acc_1.checked;
+      filterOptionData.accident_2 = check_acc_2.checked;
+      filterOptionData.accident_3 = check_acc_3.checked;
+      
+      filterOptionData.weather_sp = check_wea_1.checked;
+      filterOptionData.weather_su = check_wea_2.checked;
+      filterOptionData.weather_au = check_wea_3.checked;
+      filterOptionData.weather_wi = check_wea_4.checked;
+      
+      var startDate = new Date(document.getElementById("startDate").value);
+      var endDate = new Date(document.getElementById("endDate").value);
+
+      filterOptionData.startDate = startDate.getTime().toString();
+      filterOptionData.endDate = endDate.getTime().toString();
+      
+      console.log(filterOptionData);
+      Shiny.onInputChange("filterData", filterOptionData);
+      
+    }
 
   </script>
 </body>
