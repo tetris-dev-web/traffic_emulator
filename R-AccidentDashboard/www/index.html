@@ -395,10 +395,15 @@
     
     Shiny.addCustomMessageHandler("sendPlotData", function(data) {
       var chartData = [];
+      var chartColor = [];
+      
+      console.log(data);
 
-      for(var i = 0; i < data.length / 2; i++) {
-        var data_panel = {x: data[i], y:data[i + data.length/2]};
+      for(var i = 0; i < data.length / 3; i++) {
+        var data_panel = {x: data[i], y:data[i + data.length/3]};
+        
         chartData.push(data_panel);
+        chartColor.push(data[i + (data.length/3) * 2]);
       }
       
       var options = {responsive: true, maintainAspectRatio: false};
@@ -409,8 +414,17 @@
             datasets: [{
               label: 'Statistics Scater',
               data: chartData,
+              colorArea: chartColor,
               borderColor: '#2196f3',
               backgroundColor: '#2196f3',
+              fill: false,
+              pointBackgroundColor: function(context) {
+                var index = context.dataIndex;
+                    var value = context.dataset.colorArea[index];
+                    return value == 1 ? 'red' :  // draw negative values in red
+                        value == 2 ? 'blue' :    // else, alternate values in blue and green
+                            'green';
+              }
             }]
           },
           options: options

@@ -43,13 +43,17 @@ server <- function(input, output, session) {
   training.data <- scale(training[-5])
   iris.kmeans <- kmeans(training.data[,-5], centers = 3, iter.max = 10000)
   training$cluster <- as.factor(iris.kmeans$cluster)
-
+  print(training)
+  pl <- qplot(Sepal.Width, Sepal.Length, colour = cluster, data = training)
+  html_plot(pl,out=paste0(tempfile(),".html"))
+  
+  
 
   #place leaflet map in html component
   observe({
     session$sendCustomMessage("sendCameraPosition", c(pos_lat, pos_lon))
     session$sendCustomMessage("sendChartData", c(chartTitle, chartValue))
-    session$sendCustomMessage("sendPlotData", c(training$Sepal.Width, training$Sepal.Length))
+    session$sendCustomMessage("sendPlotData", c(training$Sepal.Width, training$Sepal.Length, training$cluster))
   })
   
 }
