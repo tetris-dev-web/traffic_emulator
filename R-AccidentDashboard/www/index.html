@@ -159,8 +159,14 @@
           });
     
           // reference marker
-          var marker = L.marker(pos).addTo(map).bindPopup("Camera Position: " + "Lat:" + pos.lat + " Lng:" + pos.lng);
-          marker.on("click", onShowCameraGeoPositionData);
+          // var marker = L.marker(pos).addTo(map).bindPopup("Camera Position: " + "Lat:" + pos.lat + " Lng:" + pos.lng);
+          var circle = L.circle([pos.lat, pos.lng], {
+              color: '#f03',
+              fillColor: '#f03',
+              fillOpacity: 0.5,
+              radius: 150
+          }).addTo(map).bindPopup("Camera Position: " + "Lat:" + pos.lat + " Lng:" + pos.lng);;
+          circle.on("click", onShowCameraGeoPositionData);
         });
       }
     );
