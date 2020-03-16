@@ -25,27 +25,49 @@
 
 <body>
   
-  <div id="infoPanel" style="position: absolute; z-index: 9; background-color: #fff; text-align: center; border: 1px solid #d3d3d3; width: 25rem; height: 50rem; left: 50px; top: 20px;">
-    <div id="infoPanelHeader" style="padding: 10px; cursor: move; z-index: 10; background-color: #2196F3; color: #fff;">
-      <span style="font-size: 1.5rem; font-weight: bolder;">ACCIDENT STATISTICS PANEL</span>
+  <div
+    id="infoPanel" 
+    style="
+      position: absolute; 
+      z-index: 9; 
+      background-color: #f1f1f1; 
+      text-align: center; 
+      border: 1px solid #808080; 
+      border-width: thick; 
+      border-color: #808080; 
+      width: 25rem; 
+      height: 50rem; 
+      left: 50px; 
+      top: 20px;
+  ">
+    <div 
+      id="infoPanelHeader" 
+      style="
+        padding: 10px; 
+        cursor: move; 
+        z-index: 10; 
+        background-color: #808080; 
+        color: #fff;
+    ">
+      <span style="font-size: 1rem; font-weight: bolder;">ACCIDENT STATISTICS PANEL</span>
     </div>
     <div>
       <div style="margin: 1rem;">
         
-        <div style="margin-top: .25rem; text-align: left;">
-          <h5>Date <i class="fas fa-clock"></i></h5>
+        <div style="text-align: left;">
+          <h6>Date <i class="fas fa-clock"></i></h6>
         </div>
 
         <div>
           <div style="display: flex; justify-content: space-between;">
             <div style="font-size: 1rem; font-weight: bold;">
-              <span class="badge badge-primary badge-block">Start Date:
+              <span class="badge badge-primary badge-block" style="background-color: #808080;">Start Date:
               <input type="date" id="startDate" name="startDate" /></span>
             </div>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: .5rem;">
             <div style="font-size: 1rem; font-weight: bold;">
-              <span class="badge badge-primary badge-block">End &nbsp;&nbsp;Date:
+              <span class="badge badge-primary badge-block" style="background-color: #808080;">End &nbsp;&nbsp;Date:
               <input type="date" id="endDate" name="endDate" /></span>
             </div>
           </div>
@@ -53,11 +75,11 @@
         
         <hr />
         
-        <div style="margin-top: .25rem; text-align: left;">
-          <h5>Accident <i class="fas fa-car"></i></h5>
+        <div style="text-align: left;">
+          <h6>Accident <i class="fas fa-car"></i></h6>
         </div>
         
-        <div style="text-align: left; margin-top: .2rem; font-size: 1rem; font-weight: bold; display: flex; justify-content: space-between;">
+        <div style="text-align: left; font-size: 1rem; font-weight: 600; display: flex; justify-content: space-between;">
           <div>
             <input type="checkbox" id="idAccident_1"> Accident 1 
           </div>
@@ -72,10 +94,10 @@
         <hr />
         
         <div style="margin-top: .25rem; text-align: left;">
-          <h5>Weather <i class="fas fa-cloud"></i></h5>
+          <h6>Weather <i class="fas fa-cloud"></i></h6>
         </div>
         
-        <div style="text-align: left; margin-top: .2rem; font-size: 1rem; font-weight: bold; display: flex; justify-content: space-between;">
+        <div style="text-align: left; font-size: 1rem; font-weight: 600; display: flex; justify-content: space-between;">
           <div>
             <input type="checkbox" id="idWeather_sp"> Spring
           </div>
@@ -93,7 +115,7 @@
         <hr />
         
         <div>
-          <button type="button" class="btn btn-primary btn-block" onclick="showStatistics()">
+          <button type="button" class="btn btn-info" onclick="showStatistics()">
             Confirm
           </button>  
         </div>
@@ -122,11 +144,14 @@
     top: calc(100vh - 6.6rem); 
     left: 50px;
     font-size: 1rem;
-    font-weight: bolder;
+    font-weight: 500;
     padding-bottom: .5rem;
     padding-top: .5rem;
     padding-left: 1rem;
     padding-right: 2.5rem;
+    border: 2px solid #808080; 
+    border-width: 2px; 
+    border-color: #808080;
   ">
     <div>
       <span style="background-color: red; display: block; float: left; margin-right: 10px; width: 15px; height: 15px; margin-top: 5px; border-radius: 50%">

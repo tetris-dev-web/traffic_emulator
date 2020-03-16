@@ -38,8 +38,7 @@ server <- function(input, output, session) {
   })
   
   inTrain <- createDataPartition(y = iris$Species, p = 0.7, list = F)
-  print(inTrain)
-  
+
   training <- iris[inTrain,]
   training.data <- scale(training[-5])
   iris.kmeans <- kmeans(training.data[,-5], centers = 3, iter.max = 10000)
