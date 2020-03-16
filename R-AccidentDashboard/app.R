@@ -1,3 +1,7 @@
+library(R3port)
+library(png)
+library(caret)
+
 pos_lat <- c(31.497555, 31.513837, 31.474463, 31.465495)
 pos_lon <- c(120.317609, 120.356662, 120.356491, 120.348036)
 
@@ -33,11 +37,20 @@ server <- function(input, output, session) {
 
   })
   
+  inTrain <- createDataPartition(y = iris$Species, p = 0.7, list = F)
+  print(inTrain)
+  
+  training <- iris[inTrain,]
+  training.data <- scale(training[-5])
+  iris.kmeans <- kmeans(training.data[,-5], centers = 3, iter.max = 10000)
+  training$cluster <- as.factor(iris.kmeans$cluster)
+
+
   #place leaflet map in html component
   observe({
     session$sendCustomMessage("sendCameraPosition", c(pos_lat, pos_lon))
     session$sendCustomMessage("sendChartData", c(chartTitle, chartValue))
-    session$sendCustomMessage("sendPlotData", c(chartTitle, chartValue))
+    session$sendCustomMessage("sendPlotData", c(training$Sepal.Width, training$Sepal.Length))
   })
   
 }

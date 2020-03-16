@@ -369,41 +369,12 @@
     
     
     Shiny.addCustomMessageHandler("sendPlotData", function(data) {
-      var data = [
-        {
-          x: 5,
-          y: 4
-        },
-        {
-          x: 2,
-          y: 2
-        },
-        {
-          x: 4,
-          y: 5
-        },
-        {
-          x: 2,
-          y: 2
-        },
-        {
-          x: 3,
-          y: 4
-        },
-        {
-          x: 3,
-          y: 5
-        },
-        {
-          x: 3,
-          y: 1
-        },
-        {
-          x: 6,
-          y: 6
- 
-        }
-      ];
+      var chartData = [];
+
+      for(var i = 0; i < data.length / 2; i++) {
+        var data_panel = {x: data[i], y:data[i + data.length/2]};
+        chartData.push(data_panel);
+      }
       
       var options = {responsive: true, maintainAspectRatio: false};
       
@@ -412,7 +383,7 @@
           data: {
             datasets: [{
               label: 'Statistics Scater',
-              data: data,
+              data: chartData,
               borderColor: '#2196f3',
               backgroundColor: '#2196f3',
             }]
