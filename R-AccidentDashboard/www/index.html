@@ -163,7 +163,9 @@
           var circle = L.circle([pos.lat, pos.lng], {
               color: '#f03',
               fillColor: '#f03',
-              fillOpacity: 0.5,
+              fillOpacity: 0.34,
+              opacity: 0.34,
+              weight: 2,
               radius: 150
           }).addTo(map).bindPopup("Camera Position: " + "Lat:" + pos.lat + " Lng:" + pos.lng);;
           circle.on("click", onShowCameraGeoPositionData);
