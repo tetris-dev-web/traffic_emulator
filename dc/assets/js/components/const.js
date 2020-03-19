@@ -42,6 +42,15 @@ const COLOR_BLACK = {'r': 0.1, 'g': 0.1, 'b':0.1};
 const COLOR_GREEN = {'r': 0, 'g': 1, 'b':0};
 const COLOR_BKAIR = {'r': 1, 'g': 0, 'b':0};
 
+const EVT_CRASH = 0.2;
+const EVT_SIDECRASH = 0.8;
+
+const STREET_RADIUS = 600;
+const INTER_RADIUS = 100;
+const BRIDGE_DEEP = 600;
+
+const GO_EVENT = 0.5;
+
 g_pVehicles = [];
 g_pVehicles_len = 0;
 

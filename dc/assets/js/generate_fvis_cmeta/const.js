@@ -28,11 +28,11 @@ const LANE_SMAX = 90; // 90 km/h
 const LANE_SMIN = 70; // 70 km/h
 const LANE_SDIFF = 10; // speed differenence between lane
 const LANE_CLR = 0; // 0 – white, 1 – yellow, 2 – red, 3 – blue
-const LANE_PTS_STEP = 100; // show pts for each 1 meter ( 100m )
+const LANE_PTS_STEP = 1; // show pts for each 1 meter ( 100m )
 
 const FVIS_CNT_CAR_LANE = 20; // number of cars in each lane
 const FVIS_CAPTURE_DURATION = 300; // KVIS duration
-const FVIS_CAPTURE_STEP = 30; // Generate KVIS for each 30 s
+const FVIS_CAPTURE_STEP = 300; // Generate KVIS for each 30 s
 const FVIS_CAPTURE_FREQ = 1000; // miliseconds per frame
 const FVIS_CAR_DISTANCE_MIN = 7; // distance between cars(m)
 const FVIS_CAR_DISTANCE_MAX = 30; // distance between cars(m)

@@ -3,9 +3,11 @@ var mapboxAccessToken =
     'pk.eyJ1IjoiZGVubmlzd2FsdGVyIiwiYSI6ImNqdHNnZXEwejBwcTk0ZGxhMWVsamM5c2UifQ.2UTF5HZ77qcKVzHf3Txlhw';
 var map = L.map('map').setView([31.25750030355148, 120.11138710053002], 10);
 
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + mapboxAccessToken, {
-    id: 'mapbox/light-v9',
-}).addTo(map);
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + mapboxAccessToken, {id: 'mapbox/light-v9',}).addTo(map);
+
+//map = L.map('map', {crs: L.CRS.EPSG3857, center: [30.6851225, 104.0562385], zoom: 11, });
+//L.tileLayer('http://www.arctiler.com:9009/arctiler/arcgis/services/chengdu/MapServer/tile/{z}/{y}/{x}').addTo(map);
+
 
 // create island
 var region_latlngs = [];

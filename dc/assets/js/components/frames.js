@@ -14,6 +14,8 @@ function parsingFvis(data) {
                 vehicle_json.id64 = fvis_json[i].items[j].dck.id64;
                 vehicle_json.tick32 = fvis_json[i].items[j].dcv.tick32 + k;
                 vehicle_json.sPt_z = getStartsPt_z(vehicle_json.id64, vehicle_json.tick32);
+                vehicle_json.sPt_x = getStartsPt_x(vehicle_json.id64, vehicle_json.tick32);
+                vehicle_json.sPt_y = getStartsPt_y(vehicle_json.id64, vehicle_json.tick32);
                 vehicle_json.pt = fvis_json[i].items[j].dcv.apts[k].pt;
                 vehicle_json.rot = fvis_json[i].items[j].dcv.apts[k].rot;
                 vehicle_json.clr = fvis_json[i].items[j].dcv.clr;
@@ -35,6 +37,32 @@ function getStartsPt_z(id64, tick32) {
     }
     else {
         return ary[0].pt[2];
+    }
+}
+
+function getStartsPt_x(id64, tick32) {
+    var ary = g_vehicles_json.filter(function (item) {
+        return ((item.id64 == id64) && (item.tick32 == (tick32 - 1)));
+    });
+
+    if (ary.length == 0) {
+        return 0;
+    }
+    else {
+        return ary[0].pt[0];
+    }
+}
+
+function getStartsPt_y(id64, tick32) {
+    var ary = g_vehicles_json.filter(function (item) {
+        return ((item.id64 == id64) && (item.tick32 == (tick32 - 1)));
+    });
+
+    if (ary.length == 0) {
+        return 0;
+    }
+    else {
+        return ary[0].pt[1];
     }
 }
 
@@ -112,7 +140,7 @@ function getVehicleParentIdx(typ, clr) {
 
 function frame1(tick32) {
     var ary = g_vehicles_json.filter(function (item) {
-        return ((item.tick32 == tick32) && (item.pt[2] >= 0) && (item.pt[2] <= 50000));
+        return ((item.tick32 == tick32) && (item.pt[2] >= 0) && (item.pt[2] <= 50000) && (item.pt[0] >= -20000) && (item.pt[0] <= 30000));
     });
     return ary
 }
@@ -130,12 +158,14 @@ function animation(tick32) {
             cVehicle.idx = g_cVehicles_len;
             cVehicle.flag = 1;
             cVehicle.sPt_z = frame[i].sPt_z;
+            cVehicle.sPt_x = frame[i].sPt_x;
+            cVehicle.sPt_y = frame[i].sPt_y;
             cVehicle.pt = frame[i].pt;
             cVehicle.bbox = frame[i].bbox;
             cVehicle.rot = frame[i].rot;
             cVehicle.id64 = frame[i].id64;
             g_cVehicles[g_cVehicles_len] = cVehicle;
-            g_cVehicles[g_cVehicles_len].instance.position = new BABYLON.Vector3(frame[i].pt[0] / SCALE_METER2CM, frame[i].bbox[1] / (2*SCALE_METER2CM), frame[i].sPt_z / SCALE_METER2CM);
+            g_cVehicles[g_cVehicles_len].instance.position = new BABYLON.Vector3(frame[i].pt[0] / SCALE_METER2CM, frame[i].sPt_y / SCALE_METER2CM + frame[i].bbox[1] / (2*SCALE_METER2CM), frame[i].sPt_z / SCALE_METER2CM);
             g_cVehicles[g_cVehicles_len].instance.scaling = new BABYLON.Vector3(frame[i].bbox[0] / SCALE_METER2CM, frame[i].bbox[1] / SCALE_METER2CM, frame[i].bbox[2] / SCALE_METER2CM);
             
             g_cVehicles_len ++;
@@ -144,9 +174,11 @@ function animation(tick32) {
             g_cVehicles[freeMeshes[0].idx].flag = 1;
             g_cVehicles[freeMeshes[0].idx].pt = frame[i].pt;
             g_cVehicles[freeMeshes[0].idx].sPt_z = frame[i].sPt_z;
+            g_cVehicles[freeMeshes[0].idx].sPt_x = frame[i].sPt_x;
+            g_cVehicles[freeMeshes[0].idx].sPt_y = frame[i].sPt_y;
             g_cVehicles[freeMeshes[0].idx].bbox = frame[i].bbox;
             g_cVehicles[freeMeshes[0].idx].rot = frame[i].rot;
-            g_cVehicles[freeMeshes[0].idx].instance.position = new BABYLON.Vector3(frame[i].pt[0] / SCALE_METER2CM, frame[i].bbox[1] / (2*SCALE_METER2CM), frame[i].sPt_z / SCALE_METER2CM);
+            g_cVehicles[freeMeshes[0].idx].instance.position = new BABYLON.Vector3(frame[i].pt[0] / SCALE_METER2CM, frame[i].sPt_y / SCALE_METER2CM + frame[i].bbox[1] / (2*SCALE_METER2CM), frame[i].sPt_z / SCALE_METER2CM);
             g_cVehicles[freeMeshes[0].idx].instance.scaling = new BABYLON.Vector3(frame[i].bbox[0] / SCALE_METER2CM, frame[i].bbox[1] / SCALE_METER2CM, frame[i].bbox[2] / SCALE_METER2CM);
         }
     }
@@ -166,6 +198,8 @@ function init() {
         g_cVehicles[i].instance.rotation = new BABYLON.Vector3(0, 0, 0);
         g_cVehicles[i].pt = [];
         g_cVehicles[i].sPt_z = [];
+        g_cVehicles[i].sPt_x = [];
+        g_cVehicles[i].sPt_y = [];
         g_cVehicles[i].bbox = [];
         g_cVehicles[i].rot = 0;
         g_cVehicles[i].flag = -1;

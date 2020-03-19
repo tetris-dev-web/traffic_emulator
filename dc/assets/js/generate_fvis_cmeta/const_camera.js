@@ -23,43 +23,53 @@ const CAMERA_INFO = [{
     area: 1,
     camera: 4,
     lat: 120.04091326463274,
-    long: 31.301182902795244
+    long: 31.301182902795244,
+    cntLane: 3
 }, {
     zone: 1,
     area: 1,
     camera: 5,
     lat: 120.03856673769438,
-    long: 31.29806769173379
+    long: 31.29806769173379,
+    cntLane: 4
 }, {
     zone: 1,
     area: 1,
     camera: 6,
     lat: 120.04241297137791,
-    long: 31.305944419363428
+    long: 31.305944419363428,
+    cntLaneCross: 3
 }, {
     zone: 1,
     area: 1,
     camera: 7,
     lat: 120.03458088960866,
-    long: 31.305159728228524
+    long: 31.305159728228524,
+    cntLaneCross: 4
 }, {
     zone: 1,
     area: 1,
     camera: 8,
     lat: 120.03500064631893,
-    long: 31.30066575110924
+    long: 31.30066575110924,
+    cntLaneCross: 4,
+    cntLane:4
 }, {
     zone: 1,
     area: 1,
     camera: 9,
     lat: 120.04035821162532,
-    long: 31.298645463244153
+    long: 31.298645463244153,
+    cntLaneCross: 4,
+    cntLane:6
 }, {
     zone: 1,
     area: 1,
     camera: 10,
     lat: 120.03897636026379,
-    long: 31.302382224227255
+    long: 31.302382224227255,
+    cntLaneCross: 4,
+    cntLane:4
 }, {
     zone: 1,
     area: 1,
