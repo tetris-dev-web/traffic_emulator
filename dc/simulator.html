@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>emulation</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <script src="assets/js/babylon.js"></script>
+    <style>
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-primary navbar-expand-sm" style="background-color: #e3f2fd;">
+    <a class="btn btn-primary" href='index.html' style="margin: 10px;">Back2Map</a>
+</nav>
+<canvas id="renderCanvas"></canvas>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_rendering.js"></script>
+
+<script type="text/javascript" src="assets/js/components/ground.js"></script>
+<script type="text/javascript" src="assets/js/components/lane.js"></script>
+<script type="text/javascript" src="assets/js/components/frames.js"></script>
+<script type="text/javascript" src="assets/js/components/camera.js"></script>
+<script type="text/javascript" src="assets/js/components/light.js"></script>
+<script type="text/javascript" src="assets/js/components/const.js"></script>
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/const.js"></script>
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_camera.js"></script>
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/long.js"></script>
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/create_car.js"></script>
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/const_evt.js"></script>
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/cmeta.js"></script>
+<script type="text/javascript" src="assets/js/generate_fvis_cmeta/fvis.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="config.js"></script>
+<script>
+    function getEmetaFromRServer(cameraId, areaId, zoneId, to, from) {
+        $.ajax({
+            url: CLOUD_ENDPOINT + '/emeta',
+            type: "GET",
+            crossDomain: true,
+            data: {
+                camera: cameraId,
+                area: areaId,
+                zone: zoneId
+            },
+            success: function (data_response) {
+                var json_emeta = atob(data_response);
+                getFvisFromRServer(cameraId, areaId, zoneId, to, from, json_emeta);
+
+            },
+            complete: function (data_response) {
+                console.log("emeta ajax call end...");
+            }
+        });
+    }
+
+    function getFvisFromRServer(cameraId, areaId, zoneId, to, from, json_emeta) {
+        $.ajax({
+            url: CLOUD_ENDPOINT + '/fvis',
+            type: "GET",
+            crossDomain: true,
+            data: {
+                camera: cameraId,
+                area: areaId,
+                zone: zoneId,
+                to: to,
+                from: from
+            },
+            success: function (data_response) {
+
+                var json_fvis = atob(data_response);
+                console.log(json_fvis);
+                Main(json_fvis, json_emeta);
+
+            },
+            complete: function (data_response) {
+                console.log("fvis ajax call end...");
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+
+    var to = 1579282359; //1577949180,
+    var from = 1579282090;
+    var urlParams = new URLSearchParams(window.location.search);
+    var zoneId = urlParams.get('zone'),
+        areaId = urlParams.get('area'),
+        cameraId = urlParams.get('camera');
+
+    switch (version) {
+        case 0:         // R api call
+            getEmetaFromRServer(cameraId, areaId, zoneId, to, from);
+            break;
+        case 1:         // JS api call
+            var json_emeta = emeta_create(zoneId, areaId, cameraId);
+            var json_fvis = fvis_create(zoneId, areaId, cameraId, Math.round(Date.now() / 1000), Math.round(Date.now() / 1000) + FVIS_CAPTURE_DURATION);
+            console.log("json_emeta:", JSON.parse(json_emeta));
+
+            console.log(JSON.parse(json_fvis));
+//                console.log(zoneId);
+//                console.log(areaId);
+//                console.log(cameraId);
+            Main(json_fvis, json_emeta);
+            break;
+        default:
+            break;
+    }
+
+    function Main(json_fvis, json_emeta) {
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+
+        var createScene = function () {
+            var scene = new BABYLON.Scene(engine);
+
+            // Camera
+            var camera = new Camera(scene, canvas);
+
+            // Light
+            var light = new Light(scene);
+
+            // Ground
+            var ground = new Ground(scene);
+
+            // Lane
+            //var json_emeta = emeta_create(1, 1, 1);
+            var lane = new Lane(json_emeta, scene);
+
+            // Car, Truck, Bus
+            //var json_fvis = fvis_create(1, 1, 1, Math.round(Date.now() / 1000), Math.round(Date.now() / 1000) + FVIS_CAPTURE_DURATION);
+            //console.log(json_fvis);
+
+            // loadCarMeshes(scene);
+            // setTimeout(function(){ alert("Load Finished"); createParentVehicles(scene);}, 10000);
+
+            createParentVehicles(scene);
+
+            parsingFvis(json_fvis);
+
+            var tick32 = g_vehicles_json[0].tick32;
+            var count_frame = 0;
+            var z_inc = 0;
+            var x_inc = 0;
+            var tmpinc = 0;
+            // Animations
+            scene.registerBeforeRender(function () {
+                count_frame++;
+                if (count_frame % 60 == 0) {
+                    animation(tick32);
+                    tick32++;
+                }
+                for (var i = 0; i < g_cVehicles_len; i++) {
+                    if (g_cVehicles[i].flag == 1) {
+                        z_inc = (g_cVehicles[i].pt[2] - g_cVehicles[i].sPt_z) / (FRAMES_PER_SECOND *
+                            SCALE_METER2CM);
+                        x_inc = (g_cVehicles[i].pt[0] - g_cVehicles[i].sPt_x) / (FRAMES_PER_SECOND *
+                            SCALE_METER2CM);
+                        
+                        g_cVehicles[i].instance.position.z += z_inc;
+                        g_cVehicles[i].instance.position.x += x_inc;
+
+                        if (g_cVehicles[i].pt[2] == 50000) {
+                            g_cVehicles[i].instance.position.y = -1000;
+                        }
+                        //g_cVehicles[i].instance.rotation.y =  PI/2 - g_cVehicles[i].rot;
+                        if (g_cVehicles[i].rot != PI/2) {
+                            g_cVehicles[i].instance.rotation.y = PI/2 - g_cVehicles[i].rot;
+                            //console.log(g_cVehicles[i].id64);
+                            //console.log(g_cVehicles[i].rot);
+                        }
+
+                        // hide vehicles which has pos-z == 0
+                        if ((g_cVehicles[i].instance.position.z < 1) || (g_cVehicles[i].instance
+                                    .position
+                                    .z >
+                                499)) {
+                            g_cVehicles[i].instance.position.y = -1000;
+                        }
+                        // hide vehicles which has pos-y == 0
+                        if ((g_cVehicles[i].instance.position.x < -200) || (g_cVehicles[i].instance
+                                    .position
+                                    .x >
+                                299)) {
+                            g_cVehicles[i].instance.position.y = -1000;
+                        }
+                    }
+                }
+            });
+
+            return scene;
+        };
+
+        engine = createDefaultEngine();
+        if (!engine) throw 'engine should not be null.';
+        scene = createScene();
+
+
+        // Skybox
+        var skybox = BABYLON.Mesh.CreateBox("skyBox", 10000.0, scene);
+        var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        skyboxMaterial.disableLighting = true;
+        skybox.material = skyboxMaterial;
+
+        engine.runRenderLoop(function () {
+            if (scene) {
+                scene.render();
+            }
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    }
+</script>
+
+</body>
+
+</html>
